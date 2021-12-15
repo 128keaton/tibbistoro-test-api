@@ -16,7 +16,7 @@ your-data-unitXXX
 
 ## Endpoints
 ### Identify
-### From the Tibbo
+#### From the Tibbo
 
 Used to associate a Tibbo's IP Address with a Unit ID on the backend
 
@@ -38,7 +38,7 @@ Used to associate a Tibbo's IP Address with a Unit ID on the backend
 
 
 ### Authenticate
-### From the Tibbo
+#### From the Tibbo
 
 Used to test passed card data against the backend database
 
