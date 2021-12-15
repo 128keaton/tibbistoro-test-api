@@ -4,7 +4,7 @@ const http = require('http');
 
 const port = 3000;
 
-// TODO: Persistent storage (DB)
+// Warning, storage is not persistent
 let units = {};
 
 const boolNoYes = (boolean) => (!!boolean ? "yes" : "no");
@@ -64,5 +64,5 @@ app.post('/door/:unit', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Tibbistoro API listening at http://localhost:${port}`)
+    console.log(`Tibbistoro Test API listening at http://localhost:${port}`)
 })
