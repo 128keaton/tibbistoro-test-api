@@ -14,6 +14,20 @@ your-data-unitXXX
 
 *Note:* `unitXXX` meaning the unit ID will always be the last hyphen-separated item.
 
+## Authentication
+The files `key.txt` and `value.txt` must be created and their contents must match what is 
+bundled in the firmware of the Tibbo.
+
+### Sample `key.txt`
+```text
+SampleKey
+```
+
+### Sample `value.txt`
+```text
+Tibbistoro
+```
+
 ## Endpoints
 ### Identify
 #### From the Tibbo

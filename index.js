@@ -1,13 +1,53 @@
 const express = require('express');
 const app = express();
 const http = require('http');
+const crypto = require('crypto');
+const fs = require('fs');
 
 const port = 3000;
+
+let key, value;
+
+fs.readFile('key.txt', 'utf8' , (err, data) => {
+    if (err) {
+        console.error(err);
+        console.error('Could not read key.txt!');
+        process.exit(-1);
+    }
+
+    key = data;
+});
+
+fs.readFile('value.txt', 'utf8' , (err, data) => {
+    if (err) {
+        console.error(err);
+        console.error('Could not read value.txt!');
+        process.exit(-1);
+    }
+
+    value = data;
+})
+
 
 // Warning, storage is not persistent
 let units = {};
 
 const boolNoYes = (boolean) => (!!boolean ? "yes" : "no");
+
+const requestPermitted = (req) => {
+    if (req.headers['authentication']) {
+        const decipher = crypto.createDecipheriv("rc4", key, '');
+        const rawValue = unescape((req.headers['authentication'] + '').replace(/\+/g, '%20'));
+
+        let decrypted = decipher.update(rawValue, "binary", "utf8");
+        decrypted += decipher.final("utf8");
+
+        return (decrypted === value);
+    }
+
+    return false;
+}
+
 const processTibboRequest = (req, res, callback) => {
     let requestString = '';
 
@@ -16,10 +56,15 @@ const processTibboRequest = (req, res, callback) => {
     });
 
     req.on("end", () => {
-        const responseValue = callback(requestString);
+        if (requestPermitted(req)) {
 
-        if (responseValue !== null && responseValue !== undefined) {
-            res.send(responseValue);
+            const responseValue = callback(requestString);
+
+            if (responseValue !== null && responseValue !== undefined) {
+                res.send(responseValue);
+            }
+        } else {
+            console.error('REQUEST DENIED');
         }
     });
 };
