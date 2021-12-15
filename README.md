@@ -34,6 +34,7 @@ Used to associate a Tibbo's IP Address with a Unit ID on the backend
 **Example Data**
 > `0.0.0.0-unit10`
 
+---
 
 
 ### Authenticate
