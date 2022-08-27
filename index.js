@@ -3,30 +3,8 @@ const app = express();
 const http = require('http');
 const crypto = require('crypto');
 const fs = require('fs');
-
+const reader = require("readline-sync");
 const port = 3000;
-
-let key, value;
-
-fs.readFile('key.txt', 'utf8' , (err, data) => {
-    if (err) {
-        console.error(err);
-        console.error('Could not read key.txt!');
-        process.exit(-1);
-    }
-
-    key = data;
-});
-
-fs.readFile('value.txt', 'utf8' , (err, data) => {
-    if (err) {
-        console.error(err);
-        console.error('Could not read value.txt!');
-        process.exit(-1);
-    }
-
-    value = data;
-})
 
 
 // Warning, storage is not persistent
@@ -35,6 +13,7 @@ let units = {};
 const boolNoYes = (boolean) => (!!boolean ? "yes" : "no");
 
 const requestPermitted = (req) => {
+	return true;
     if (req.headers['authentication']) {
         const decipher = crypto.createDecipheriv("rc4", key, '');
         const rawValue = unescape((req.headers['authentication'] + '').replace(/\+/g, '%20'));
@@ -44,6 +23,7 @@ const requestPermitted = (req) => {
 
         return (decrypted === value);
     }
+
 
     return false;
 }
@@ -73,7 +53,13 @@ app.post('/auth', (req, res) => processTibboRequest(req, res, (requestString) =>
     const [cardCode, facilityCode, unit] = requestString.split('-');
 
     console.log("AUTH:", cardCode, facilityCode, unit);
-    return boolNoYes(cardCode === '60679' && facilityCode === '2052');
+
+    let approved = reader.question("Approve(y/n)? ");
+    if (approved === "y") {
+	return "yes";
+    }
+
+    return "no";
 }));
 
 
